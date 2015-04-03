@@ -2,7 +2,6 @@ import logging
 import socket
 import datetime
 import time
-import random
 
 from sniffeq.settings import GRAPHITE_CARBON_HOST, GRAPHITE_CARBON_PORT
 from sniffeq.models.presentation import Presentation

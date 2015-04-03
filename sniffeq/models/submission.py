@@ -58,12 +58,13 @@ class Submission(SEBaseModel, Document):
     meta = {'indexes': ['adsh']}
 
     def save(self, *args, **kwargs):
-	if not self.fy:
-	    self.fy = None
-	if not self.fp:
-	    self.fp = None
-	if not self.afs:
-	   self.afs = None
+        if not self.fy:
+            self.fy = None
+        if not self.fp:
+            self.fp = None
+        if not self.afs:
+            self.afs = None
+
         if isinstance(self.period, str):
             self.period = datetime.strptime(self.period, '%Y%m%d')
         if isinstance(self.filed, str):
