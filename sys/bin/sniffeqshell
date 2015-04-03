@@ -1,0 +1,38 @@
+#!/usr/bin/env python
+
+import os
+import sys
+from IPython.terminal.ipapp import TerminalIPythonApp
+from IPython.terminal.interactiveshell import TerminalInteractiveShell
+
+
+PRELOAD = """
+from sniffeq.models.submission import Submission
+from sniffeq.models.number import Number
+from sniffeq.models.tag import Tag
+from sniffeq.models.presentation import Presentation
+"""
+
+def init_shell(cls):
+        """initialize the InteractiveShell instance"""
+        sys.path.insert(0, '')
+
+        cls.shell = TerminalInteractiveShell.instance(
+            config=cls.config,
+            banner1='\nSniffEq Interactive Shell',
+            banner2='==========================\n'
+                    'Imported objects: Submission, Number, Tag, Presentation\n\n',
+            display_banner=False,
+            profile_dir=cls.profile_dir,
+            ipython_dir=cls.ipython_dir
+        )
+        cls.shell.configurables.append(cls)
+
+TerminalIPythonApp.init_shell = init_shell
+
+if __name__ == '__main__':
+    app = TerminalIPythonApp.instance()
+    app.initialize(argv=[])
+    app.shell.run_code(PRELOAD)
+    app.start()
+
