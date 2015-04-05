@@ -49,9 +49,9 @@ class SniffEqServer(object):
                         header = line
                     else:
                         # skip some fields
-                        # if classRef == Number and index < 481153:
-                        #     log.info('Skipping %s: %s...', classRef.__name__, index)
-                        #     continue
+                        if classRef == Presentation and index < 247100:
+                            log.info('Skipping %s: %s...', classRef.__name__, index)
+                            continue
 
                         row = line
                         obj = {}
