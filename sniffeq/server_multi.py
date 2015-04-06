@@ -41,15 +41,21 @@ class SniffEqMapper(object):
             classRef = self.fileToClassMap.get(filename)
 
             lines = linecache.getlines(filepath)
+
+            index = 1
+            # skip some rows
+            # if classRef == Number:
+            #     index = 328000
+
             totalNumberOfLines = len(lines)
             response = self.pool.map(
                 self.process_line,
                 itertools.izip(
                     itertools.repeat(classRef),
-                    xrange(totalNumberOfLines),
+                    xrange(index, totalNumberOfLines + 100), # +100 threshold
                     itertools.repeat(totalNumberOfLines),
                     itertools.repeat(lines[0]),
-                    lines[1:],
+                    lines[index:],
                 ),
                 chunksize=chunksize,
             )
@@ -58,11 +64,10 @@ class SniffEqMapper(object):
             success = response.count({'success': True})
             responses[filename] = {
                 'success': success,
-                'errors': len(response) - success
+                'errors': totalNumberOfLines - index - success
             }
 
-            sys.stdout.write('\n\n')
-            sys.stdout.flush()
+            log.info('Done %s!', filepath)
 
         return responses
 
@@ -71,11 +76,6 @@ def process_line(lines):
     classRef, index, total, header, row = lines
     header = header.strip().split('\t')
     row = row.strip().split('\t')
-
-    # skip some fields
-    # if classRef == Presentation and index < 247100:
-    #     log.info('Skipping %s: %s...', classRef.__name__, index)
-    #     return {'success': True, 'skip': True}
 
     obj = {}
     for key, value in zip(header, row):
